@@ -1,0 +1,43 @@
+name: Build and Deploy to Docker
+
+on:
+  workflow_dispatch:         # Manual trigger
+  pull_request:
+    branches:
+      - main                 # Runs on PRs targeting main
+  push:
+    branches:
+      - main                 # Auto-trigger on code push to main
+
+env:
+  AZURE_WEBAPP_NAME: dev-demo-service
+  AZURE_WEBAPP_PACKAGE_PATH: ./publish
+
+jobs:
+  build-publish-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore CICDDEmo.sln
+
+      - name: Build solution
+        run: dotnet build CICDDEmo.sln --configuration Release --no-restore
+
+      - name: Publish app
+        run: dotnet publish CICDDEmo.sln --configuration Release --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
