@@ -10,7 +10,7 @@ on:
       - main                 # Auto-trigger on code push to main
 
 env:
-  AZURE_WEBAPP_NAME: cicd-demo
+  AZURE_WEBAPP_NAME: dev-demo-service
   AZURE_WEBAPP_PACKAGE_PATH: ./publish
 
 jobs:
