@@ -8,10 +8,11 @@ on:
   push:
     branches:
       - main                 # Auto-trigger on code push to main
+
 env:
   AZURE_WEBAPP_NAME: cicd-demo
-  AZURE_WEBAPP_PACKAGE_PATH: "./publish"
-  
+  AZURE_WEBAPP_PACKAGE_PATH: ./publish
+
 jobs:
   build-publish-deploy:
     runs-on: ubuntu-latest
@@ -32,12 +33,11 @@ jobs:
         run: dotnet build CICDDEmo.sln --configuration Release --no-restore
 
       - name: Publish app
-        run: dotnet publish CICDDEmo.sln --configuration Release --no-build --output ./publish '${{env.AZURE_WEBAPP_PACKAGE_PATH}}'
-        
-      - name: Depoyment
-        uses: actions/webapps-deploy@v2
+        run: dotnet publish CICDDEmo.sln --configuration Release --no-build --output ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
+
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
         with:
-          app-name: ${{env.AZURE_WEBAPP_NAME}}
-          publish-profile: ${{secrets.AZURE_PUBLISH_PROFILE}}
-          package: "${{env.AZURE_WEBAPP_PACKAGE_PATH}}"
-        
+          app-name: ${{ env.AZURE_WEBAPP_NAME }}
+          publish-profile: ${{ secrets.AZURE_PUBLISH_PROFILE }}
+          package: ${{ env.AZURE_WEBAPP_PACKAGE_PATH }}
