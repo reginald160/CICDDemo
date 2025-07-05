@@ -1,0 +1,28 @@
+name: Build and Deploy to Docker
+
+on:
+  push:
+    branches:
+      - main  # Trigger when code is pushed to the 'main' branch
+
+jobs:
+  build-publish-deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: '8.0.x'
+
+      - name: Restore dependencies
+        run: dotnet restore ./CICDDEmo.sln
+
+      - name: Build solution
+        run: dotnet build ./CICDDEmo.sln --configuration Release --no-restore
+
+      - name: Publish app
+        run: dotnet publish ./CICDDEmo.sln --configuration Release --no-build
