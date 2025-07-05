@@ -1,9 +1,13 @@
 name: Build and Deploy to Docker
 
 on:
+  workflow_dispatch:         # Manual trigger
+  pull_request:
+    branches:
+      - main                 # Runs on PRs targeting main
   push:
     branches:
-      - main  # Trigger when code is pushed to the 'main' branch
+      - main                 # Auto-trigger on code push to main
 
 jobs:
   build-publish-deploy:
@@ -19,10 +23,10 @@ jobs:
           dotnet-version: '8.0.x'
 
       - name: Restore dependencies
-        run: dotnet restore ./CICDDEmo.sln
+        run: dotnet restore CICDDEmo.sln
 
       - name: Build solution
-        run: dotnet build ./CICDDEmo.sln --configuration Release --no-restore
+        run: dotnet build CICDDEmo.sln --configuration Release --no-restore
 
       - name: Publish app
-        run: dotnet publish ./CICDDEmo.sln --configuration Release --no-build
+        run: dotnet publish CICDDEmo.sln --configuration Release --no-build --output ./publish
