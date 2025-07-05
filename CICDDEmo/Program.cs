@@ -9,6 +9,7 @@ var app = builder.Build();
 //Latest comment
 // Configure the HTTP request pipeline.
 app.UseSwagger();
+//
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
@@ -31,6 +32,22 @@ app.MapGet("/weatherforecast", () =>
     return forecast;
 })
 .WithName("GetWeatherForecast")
+.WithOpenApi();
+
+
+app.MapGet("/weatherforecastv2", () =>
+{
+    var forecast = Enumerable.Range(1, 5).Select(index =>
+        new WeatherForecast
+        (
+            DateOnly.FromDateTime(DateTime.Now.AddDays(index)),
+            Random.Shared.Next(-20, 55),
+            summaries[Random.Shared.Next(summaries.Length)]
+        ))
+        .ToArray();
+    return forecast;
+})
+.WithName("GetWeatherForecastv2")
 .WithOpenApi();
 
 app.Run();
