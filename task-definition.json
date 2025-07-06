@@ -1,0 +1,57 @@
+{
+    "family": "zero-waste-4",
+    "containerDefinitions": [
+        {
+            "name": "zero-waste-api",
+            "image": "550861863873.dkr.ecr.eu-north-1.amazonaws.com/zerowaste:latest",
+            "cpu": 0,
+            "portMappings": [
+                {
+                    "name": "zerowaste",
+                    "containerPort": 8080,
+                    "hostPort": 8080,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                },
+                {
+                    "name": "zerowaste2",
+                    "containerPort": 8081,
+                    "hostPort": 8081,
+                    "protocol": "tcp",
+                    "appProtocol": "http"
+                }
+            ],
+            "essential": true,
+            "environment": [],
+            "environmentFiles": [],
+            "mountPoints": [],
+            "volumesFrom": [],
+            "ulimits": [],
+            "logConfiguration": {
+                "logDriver": "awslogs",
+                "options": {
+                    "awslogs-group": "/ecs/zero-waste-4",
+                    "awslogs-create-group": "true",
+                    "awslogs-region": "eu-north-1",
+                    "awslogs-stream-prefix": "ecs"
+                },
+                "secretOptions": []
+            },
+            "systemControls": []
+        }
+    ],
+    "executionRoleArn": "arn:aws:iam::550861863873:role/ecsTaskExecutionRole",
+    "networkMode": "awsvpc",
+    "volumes": [],
+    "placementConstraints": [],
+    "requiresCompatibilities": [
+        "FARGATE"
+    ],
+    "cpu": "1024",
+    "memory": "3072",
+    "runtimePlatform": {
+        "cpuArchitecture": "X86_64",
+        "operatingSystemFamily": "LINUX"
+    },
+    "enableFaultInjection": false
+}
